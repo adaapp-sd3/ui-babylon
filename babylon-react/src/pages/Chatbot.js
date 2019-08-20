@@ -1,59 +1,88 @@
 import React, { useState } from "react";
-import "./Chatbot.css";
-
-import ChatMessage from "../chatbot-components/ChatMessage";
-import TypingIndicator from "../chatbot-components/TypingIndicator";
+import BotResponse from "./BotResponse";
+import ResponseForm from "./ResponseForm";
 
 const Chatbot = props => {
-  let initialState = [
-    { type: "bot", content: "Hi Laurie how can I help?" },
-    { type: "user", content: props.initialMessage },
-    { type: "bot", content: <TypingIndicator /> }
+
+  let caringMessages = [
+    "Let me soothe your pain",
+    "Aaaw, diddums",
+    "Tell me more",
+    "Uh huh?",
+    "I truly care",
   ];
 
-  let [messages, setMessages] = useState(initialState);
+  const someMessage = () => {
+    let rand = Math.floor (Math.random()*caringMessages.length);
+    return caringMessages[rand];
+  };
 
-  const handleNewInput = event => {
-    event.preventDefault();
-    let message = event.target[0].value;
-    event.target[0].value = "";
+  let initialMessages = [
+    { userType: "bot", content: "Hi Laurie, how can I help you?" },
+    { userType: "user", content: props.initialMessage },
+    {
+      userType: "bot",
+      content: <BotResponse newMessage= { someMessage() } />
+    }
+  ]
 
+  let [messages, setMessages] = useState(initialMessages);
+
+  const handleNewMessage = str => {
+    let newMessage = str;
+    console.log(newMessage);
+    let newBotResponse =    {
+          userType: "bot",
+          content: <BotResponse newMessage= {someMessage()} />
+        };
+    let newMessageObj = { userType: "user", content: newMessage};
     let newMessages = messages.slice(0);
-
-    newMessages.push({
-      type: "user",
-      content: message
-    });
-
-    newMessages.push({
-      type: "bot",
-      content: <TypingIndicator />
-    });
-
+    newMessages.push(newMessageObj);
+    newMessages.push(newBotResponse);
     setMessages(newMessages);
+  };
 
-    //setTimeout(() => setMessages(newMessages), 1000)
+
+  const handleTextInput = event => {
+    event.preventDefault();
+    console.log(event);
+    let newMessage = event.target[0].value;
+    console.log(newMessage);
+    handleNewMessage (newMessage);
+    event.target[0].value = '';
+    setTimeout (()=>window.scrollTo(0, 100000), 50);
+  };
+
+  const handleButtonInput = {
+    yes: (event) => {
+    handleNewMessage ("Yes");
+    },
+    no: (event) => {
+    handleNewMessage ("No");
+    }
   };
 
   return (
     <section id="chatbot" className="page">
       <header>
-        <img className="logo" alt="Babylon" src="img/babylon-logo.png" />
+        <img class="logo" alt="Babylon" src="img/babylon-logo.png" />
       </header>
-      <article>
-        {messages.map((m, i) => (
-          <ChatMessage key={i} type={m.type} last={i+1 === messages.length || i === messages.length - 2}>
+      <article class="clearfix">
+        { messages.map(m => (
+          <p className={`bubble ${m.userType} fadein`}>
             {m.content}
-          </ChatMessage>
-        ))}
+          </p>
+        )) }
       </article>
       <footer>
-        <form onSubmit={handleNewInput}>
-          <input type="text" placeholder="Type a message" />
-        </form>
+        <ResponseForm
+          inputType="text"
+          handleTextInput={ handleTextInput }
+          handleButtonInput={ handleButtonInput }
+        />
       </footer>
     </section>
   )
-};
+}
 
 export default Chatbot

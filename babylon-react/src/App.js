@@ -5,23 +5,35 @@ import Welcome from './pages/Welcome';
 import Chatbot from './pages/Chatbot';
 
 const App = () => {
-
-  const [initialMessage, setInitialMessage] = useState(null);
+  let [initialMessage, setInitialMessage] = useState(false);
+  function handleForm(event) {
+    event.preventDefault();
+    let message = event.target[0].value;
+    setInitialMessage(message);
+  }
 
   return (
-    <>
-      <a href="#chatbot" title="Skip to content">Skip to content</a>
+    <div>
+      <a href="#chatbot" id="skip-to-content" title="Skip to content">
+        Skip to content
+      </a>
       <main>
-
         {!initialMessage && (
-          <Welcome setInitialMessage={setInitialMessage} />
+          <Welcome>
+            <form onSubmit={handleForm} action="#chatbot">
+              <label htmlFor="initial">Hi Laurie, how can I help you?</label>
+              <input
+                autoFocus
+                placeholder="e.g. I have a headache"
+                type="text"
+                name="initial"
+              />
+            </form>
+          </Welcome>
         )}
-        {initialMessage && (
-          <Chatbot initialMessage={initialMessage} />
-        )}
-        
+        {initialMessage && <Chatbot initialMessage={initialMessage}  />}
       </main>
-    </>
+    </div>
   )
 }
 
