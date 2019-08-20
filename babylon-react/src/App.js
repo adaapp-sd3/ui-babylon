@@ -1,12 +1,12 @@
-import React, { useState } from "react"
-import "./App.css"
+import React, { useState } from "react";
+import "./App.css";
 
-import Welcome from './pages/Welcome'
-import Chatbot from './pages/Chatbot'
+import Welcome from './pages/Welcome';
+import Chatbot from './pages/Chatbot';
 
-function App() {
+const App = () => {
 
-  const [initialMessage, setInitialMessage] = useState(null)
+  const [initialMessage, setInitialMessage] = useState(null);
 
   return (
     <>

@@ -1,32 +1,39 @@
-import React, { useState } from "react"
-import "./Chatbot.css"
+import React, { useState } from "react";
+import "./Chatbot.css";
 
-function Chatbot(props) {
+import ChatMessage from "../chatbot-components/ChatMessage";
+import TypingIndicator from "../chatbot-components/TypingIndicator";
 
+const Chatbot = props => {
   let initialState = [
-    {type:'bot',message: 'Hi Laurie how can I help?'},
-    {type: 'user', message: props.initialMessage}
-  ]
+    { type: "bot", content: "Hi Laurie how can I help?" },
+    { type: "user", content: props.initialMessage },
+    { type: "bot", content: <TypingIndicator /> }
+  ];
 
-  let [messages, setMessages] = useState(initialState)
+  let [messages, setMessages] = useState(initialState);
 
-  function handleNewInput(event) {
-    event.preventDefault()
-    let message = event.target[0].value
-    event.target[0].value = ''
-    let newMessages = []
+  const handleNewInput = event => {
+    event.preventDefault();
+    let message = event.target[0].value;
+    event.target[0].value = "";
 
-    for (var i=0; i<messages.length; i++) {
-      newMessages.push(messages[i])
-    }
+    let newMessages = messages.slice(0);
 
     newMessages.push({
       type: "user",
-      message: message
-    })
- 
-    setMessages(newMessages)
-  }
+      content: message
+    });
+
+    newMessages.push({
+      type: "bot",
+      content: <TypingIndicator />
+    });
+
+    setMessages(newMessages);
+
+    //setTimeout(() => setMessages(newMessages), 1000)
+  };
 
   return (
     <section id="chatbot" className="page">
@@ -34,9 +41,10 @@ function Chatbot(props) {
         <img className="logo" alt="Babylon" src="img/babylon-logo.png" />
       </header>
       <article>
- 
-        {messages.map((m,i) => (
-          <p key={i} className={`bubble ${m.type}`}>{m.message}</p>
+        {messages.map((m, i) => (
+          <ChatMessage key={i} type={m.type} last={i+1 === messages.length || i === messages.length - 2}>
+            {m.content}
+          </ChatMessage>
         ))}
       </article>
       <footer>
@@ -46,6 +54,6 @@ function Chatbot(props) {
       </footer>
     </section>
   )
-}
+};
 
 export default Chatbot
