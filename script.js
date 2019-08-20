@@ -16,9 +16,9 @@
     });
 
     const handleInitalFormSubmit = e => {
-        currentView.classList.remove("current");
+        removeClass(currentView,"current");
         currentView = document.querySelector(e.target.attributes.action.value);
-        currentView.classList.add("current");
+        addClass(currentView,"current");
     };
 
     const addUserMessage = e => {
@@ -32,15 +32,15 @@
 
         p.innerText = msg;
 
-        p.classList.add("user");
-        p.classList.add("bubble");
+        addClass(p,"bubble");
+        addClass(p,"user");
 
         article.appendChild(p);
 
         var pBot = document.createElement("p");
 
-        pBot.classList.add("bubble");
-        pBot.classList.add("bot");
+        addClass(pBot,"bubble");
+        addClass(pBot,"bot");
 
         var dots = `<span>.<span>
                 <span>.<span>
@@ -49,6 +49,16 @@
         pBot.innerHTML = dots;
 
         article.appendChild(pBot);
+        
+        window.scrollTo(0,10000000);
+    };
+
+    const addClass = (el,className) => {
+        if(!el.classList.contains(className)) el.classList.add(className);
+    };
+
+    const removeClass = (el,className) => {
+        if(el.classList.contains(className)) el.classList.remove(className);
     };
 
 })();
